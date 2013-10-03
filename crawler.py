@@ -6,6 +6,7 @@ import re
 
 import codecs
 from pprint import pprint
+from time import sleep
 
 import requests
 from BeautifulSoup import BeautifulSoup
@@ -43,6 +44,7 @@ def main():
     for prid in prids:
         if fetch_subtitles(prid):
             print prid
+            sleep(1)
             
     return 0
 
