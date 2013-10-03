@@ -19,8 +19,13 @@ def fetch_subtitles(prid):
     if contents == u'No subtitle found':
         return False
     
-    with codecs.open('subtitles/%s.txt' % (prid,), 'w', 'UTF-8') as outfile:
+    file_name = 'subtitles/%s.txt' % (prid,)
+    if os.path.exists(file_name):
+        return False
+
+    with codecs.open(file_name, 'w', 'UTF-8') as outfile:
         outfile.write(contents)
+
     return True
 
 def main():
