@@ -11,6 +11,21 @@ from time import sleep
 import requests
 from BeautifulSoup import BeautifulSoup
 
+def fetch_program_info(prid):
+    try:
+        contents = requests.get('http://e.omroep.nl/metadata/aflevering/%s' % (prid,)).text
+    except Exception, e:
+        return False
+    
+    file_name = 'program_info/%s.json' % (prid,)
+    if os.path.exists(file_name):
+        return False
+
+    with codecs.open(file_name, 'w', 'UTF-8') as outfile:
+        outfile.write(contents)
+
+    return True
+
 def fetch_subtitles(prid):
     try:
         contents = requests.get('http://e.omroep.nl/tt888/%s' % (prid,)).text
@@ -44,6 +59,8 @@ def main():
     for prid in prids:
         if fetch_subtitles(prid):
             print prid
+            sleep(1)
+            fetch_program_info(prid)
             sleep(1)
             
     return 0
