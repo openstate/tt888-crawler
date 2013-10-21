@@ -54,7 +54,10 @@ def main():
         return 1
     
     soup = BeautifulSoup(contents)
-    prids = [l['href'].replace('/programmas/', '') for l in soup.findAll('a', href=re.compile(r'\/programmas\/'))]
+    data_prids = [l['href'].split('/')[-1] for l in soup.findAll('a', {'data-url': re.compile(r'.*')})]
+    old_prids = [l['href'].split('/')[-1] for l in soup.findAll('a', 'program-details')]
+    prids = list(set(data_prids + old_prids))
+    #prids = [l['href'].replace('/programmas/', '') for l in soup.findAll('a', href=re.compile(r'\/programmas\/'))]
 
     for prid in prids:
         if fetch_subtitles(prid):
