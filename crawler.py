@@ -63,7 +63,7 @@ def main(args=None):
         prids = list(set(data_prids + old_prids))
         #prids = [l['href'].replace('/programmas/', '') for l in soup.findAll('a', href=re.compile(r'\/programmas\/'))]
 
-    for prid in prids[:10]:
+    for prid in prids:
         if fetch_subtitles(prid):
             print prid
             sleep(1)
