@@ -44,22 +44,26 @@ def fetch_subtitles(prid):
 
     return True
 
-def main():
-    try:
-        contents = requests.get('http://www.npo.nl/uitzending-gemist').text
-    except Exception, e:
-        contents = u''
+def main(args=None):
+    if len(args) > 1:
+        with codecs.open(args[1], 'r', 'utf-8') as in_file:
+            prids = [l.strip() for l in in_file.readlines()]
+    else:
+        try:
+            contents = requests.get('http://www.npo.nl/uitzending-gemist').text
+        except Exception, e:
+            contents = u''
     
-    if contents == u'':
-        return 1
+        if contents == u'':
+            return 1
     
-    soup = BeautifulSoup(contents)
-    data_prids = [l['href'].split('/')[-1] for l in soup.findAll('a', {'data-url': re.compile(r'.*')})]
-    old_prids = [l['href'].split('/')[-1] for l in soup.findAll('a', 'program-details')]
-    prids = list(set(data_prids + old_prids))
-    #prids = [l['href'].replace('/programmas/', '') for l in soup.findAll('a', href=re.compile(r'\/programmas\/'))]
+        soup = BeautifulSoup(contents)
+        data_prids = [l['href'].split('/')[-1] for l in soup.findAll('a', {'data-url': re.compile(r'.*')})]
+        old_prids = [l['href'].split('/')[-1] for l in soup.findAll('a', 'program-details')]
+        prids = list(set(data_prids + old_prids))
+        #prids = [l['href'].replace('/programmas/', '') for l in soup.findAll('a', href=re.compile(r'\/programmas\/'))]
 
-    for prid in prids:
+    for prid in prids[:10]:
         if fetch_subtitles(prid):
             print prid
             sleep(1)
@@ -69,4 +73,4 @@ def main():
     return 0
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(main(sys.argv))
