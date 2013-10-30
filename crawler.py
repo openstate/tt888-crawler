@@ -68,8 +68,8 @@ def main(args=None):
         print prid
         if fetch_subtitles(prid):
             sleep(1)
-        fetch_program_info(prid)
-        sleep(1)
+        if fetch_program_info(prid):
+            sleep(1)
             
     return 0
 
