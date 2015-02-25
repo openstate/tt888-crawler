@@ -11,8 +11,11 @@ from time import sleep
 import requests
 from BeautifulSoup import BeautifulSoup
 
+SUBTITLES_SAVE_DIR = 'subtitles'
+PROGRAM_INFO_SAVE_DIR = 'program_info'
+
 def fetch_program_info(prid):
-    file_name = 'program_info/%s.json' % (prid,)
+    file_name = '%s/%s.json' % (PROGRAM_INFO_SAVE_DIR, prid,)
     if os.path.exists(file_name):
         return False
 
@@ -28,7 +31,7 @@ def fetch_program_info(prid):
     return True
 
 def fetch_subtitles(prid):
-    file_name = 'subtitles/%s.txt' % (prid,)
+    file_name = '%s/%s.txt' % (SUBTITLES_SAVE_DIR, prid,)
     if os.path.exists(file_name):
         return False
 
@@ -46,6 +49,11 @@ def fetch_subtitles(prid):
     return True
 
 def main(args=None):
+    if not os.path.exists(SUBTITLES_SAVE_DIR):
+        os.makedirs(SUBTITLES_SAVE_DIR)
+    if not os.path.exists(PROGRAM_INFO_SAVE_DIR):
+        os.makedirs(PROGRAM_INFO_SAVE_DIR)
+
     if len(args) > 1:
         with codecs.open(args[1], 'r', 'utf-8') as in_file:
             prids = [l.strip() for l in in_file.readlines()]
